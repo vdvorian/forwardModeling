@@ -19,6 +19,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/HS.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/SCA.py" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/wood.py" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
