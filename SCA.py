@@ -17,11 +17,17 @@ def get_moduli_by_SCA(pores, matrix, porosity):
     nbr = []
     por = []
 
+    # чтобы нигде не было деления на 0
     if asp1 == 1:
         asp1 = 0.99
     if asp2 == 1:
         asp2 = 0.99
 
+
+
+    # вычислим theta и fn (через аспектное отношения), которые понадобятся для дальнейших рассчетов
+
+    # asp < 1 - oblate spheroid (сплюснутый элипсоид)
     if asp1 < 1:
         theta1 = (asp1 / ((1 - asp1 ** 2) ** (3 / 2))) * (math.acos(asp1) - asp1 * math.sqrt(1 - asp1 ** 2))
         fn1 = (asp1 ** 2 / (1 - asp1 ** 2)) * (3 * theta1 - 2)
@@ -30,6 +36,7 @@ def get_moduli_by_SCA(pores, matrix, porosity):
         theta2 = (asp2 / ((1 - asp2 ** 2) ** (3 / 2))) * (math.acos(asp2) - asp2 * math.sqrt(1 - asp2 ** 2))
         fn2 = (asp2 ** 2 / (1 - asp2 ** 2)) * (3 * theta2 - 2)
 
+    # asp > 1 - prolate spheroid (вытянутый элипсоид)
     if asp1 > 1:
         theta1 = (asp1 / ((asp1 ** 2 - 1) ** (3 / 2))) * (asp1 * math.sqrt(asp1 ** 2 - 1) - math.acosh(asp1))
         fn1 = (asp1 ** 2 / (asp1 ** 2 - 1)) * (2 - 3 * theta1)
@@ -38,7 +45,11 @@ def get_moduli_by_SCA(pores, matrix, porosity):
         theta2 = (asp2 / ((asp2 ** 2 - 1) ** (3 / 2))) * (asp2 * math.sqrt(asp2 ** 2 - 1) - math.acosh(asp2))
         fn2 = (asp2 ** 2 / (asp2 ** 2 - 1)) * (2 - 3 * theta2)
 
-    epsilon = 1e-7
+
+    epsilon = 1e-7   # опять же, чтобы нигде не было деления на ноль
+
+    # пройдем по всем значениям пористости от 0 до 100%
+    # x1 - пористость, x2 - содержание твердой компоненты
     for x1 in [epsilon] + [i /1000 for i in range(1, 1000)] + [1 - epsilon]:
         x2 = 1 - x1
 
