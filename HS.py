@@ -2,6 +2,7 @@ import math
 import numpy as np
 
 
+# HS - bulk модуль - 2 компоненты
 def get_HS_bulk_bounds(bulk, shear, prop):
     # функция возвращает верхнюю и нижнюю границы HS для объемного модуля сжатия (bulk) композита,
     # состоящего из двух компонент
@@ -44,6 +45,7 @@ def get_HS_bulk_bounds(bulk, shear, prop):
 
 
 
+# HS - shear модуль - 2 компоненты
 def get_HS_shear_bounds(bulk, shear, prop):
     # функция возвращает верхнюю и нижнюю границы HS для модуля сдвига (shear) композита,
     # состоящего из двух компонент
@@ -94,6 +96,7 @@ def get_HS_shear_bounds(bulk, shear, prop):
     return shear_bounds
 
 
+# вспомогательная
 def get_proportion_for_HS(prop1, prop2):
     # функция является вспомогательной для нахождения границ HS для многих компонент,
     # на вход принимает процентное содержание двух компонент в составе многих и
@@ -105,6 +108,7 @@ def get_proportion_for_HS(prop1, prop2):
 
 
 
+# HS - bulk и shear модули - много компонент
 def get_HS_for_many_components(bulk, shear, prop):
     # функция возвращает верхнюю и нижнюю границы HS для bulk и shear модулей композита,
     # состоящего из N компонент
@@ -149,6 +153,7 @@ def get_HS_for_many_components(bulk, shear, prop):
 
 
 
+# HS - bulk и shear модули - 2 компоненты - для всех пропорций
 def get_HS_for_all_proportions(bulk, shear, delta):
     # функция рассчитывает границы HS для всех отношений двух компонент
     # на вход принимаются значения упругих модулей и параметр дискретизации
