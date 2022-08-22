@@ -6,7 +6,7 @@ def get_all_values_by_SCA(pores, matrix):
     # pores = [bulk_p, shear_p, asp_p], где элементы массива: bulk и shear модули и аспектное отношение флюида,
         # насыщающего поры (воздух, например)
     # matrix = [bulk_m, shear_m, asp_m]
-    # porosity - пористость, не более 1го знака после запятой!
+    # porosity - пористость
 
     # возвращает bulk и shear модули композита матрица+поры
 

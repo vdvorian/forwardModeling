@@ -2,9 +2,12 @@ import math
 import numpy as np
 
 # bulk модуль смеси флюидов по формуле Вуда (prop - в процентах)
-def get_bulk_modulus_by_wood(bulk, prop):
+def get_fluid_modulus_by_wood(fluid1, fluid2, prop):
     # функция принимает на вход объемные модули сжатия и объемное содержание всех флюидов,
     # входящих в поронасыщающую смесь, и возвращает модуль сжатия смеси (модуль сдвига флюида всегда = 0)
+
+    bulk = [fluid1[0], fluid2[0]]
+    average_shear = 0
 
     bulk = np.array(bulk)
     prop = np.array(prop)
@@ -13,7 +16,7 @@ def get_bulk_modulus_by_wood(bulk, prop):
     divided_bulk = np.sum(new_prop / bulk)
     average_bulk = 1 / divided_bulk   # объемный модуль сжатия смеси флюидов
 
-    return average_bulk
+    return [average_bulk, average_shear]
 
 
 # Vp в смеси флюидов по формуле Вуда (prop - в процентах)
@@ -38,7 +41,7 @@ def get_velocity_by_wood(get_bulk_modulus_by_wood, bulk, dens, prop):
 def get_saturated_by_gassman(dry, matrix, fluid, porosity):
     k_dry, g_dry = dry  # сухая порода
     k_m, g_m = matrix  # твердое вещество (без пор)
-    k_fl = fluid  # флюид
+    k_fl, g_fl = fluid  # флюид
 
     g_sat = g_dry
 

@@ -1,4 +1,5 @@
 import scipy.integrate as integrate
+import numpy as np
 
 
 def prepare_ODE_function(t, y):
@@ -27,11 +28,21 @@ def get_all_values_by_DEM(matrix):
 
     k1, n1 = matrix
 
-    result = integrate.solve_ivp(fun = prepare_ODE_function, t_span = (0, 0.999), y0 = [k1, n1],
-                                 dense_output = 'true', max_step = 0.001, vectorized = 'true')
+    result = integrate.solve_ivp(fun = prepare_ODE_function, t_span = (0, 0.99), y0 = [k1, n1],
+                                 dense_output = 'true', max_step = 0.01, vectorized = 'true')
 
     por = result.t
     k_dem = result.y[0]
     n_dem = result.y[1]
 
     return por, k_dem, n_dem
+
+
+def get_moduli_by_DEM(get_all_values_by_DEM, matrix, porosity):
+    por, k_dem, n_dem = get_all_values_by_DEM(matrix)
+
+    por_for_index = np.arange(0, 0.99, 0.01)
+    i = np.where(por_for_index == porosity/100)
+    index = i[0][0]
+
+    return [k_dem[index], n_dem[index]]
