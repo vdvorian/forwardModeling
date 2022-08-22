@@ -154,7 +154,7 @@ def get_HS_for_many_components(bulk, shear, prop):
 
 
 # HS - bulk и shear модули - 2 компоненты - для всех пропорций
-def get_HS_for_all_proportions(comp1, comp2):
+def get_HS_for_all_proportions(comp1, comp2, sampling_step = 100):
     # функция рассчитывает границы HS для всех отношений двух компонент
     # на вход принимаются значения упругих модулей и параметр дискретизации
 
@@ -170,8 +170,8 @@ def get_HS_for_all_proportions(comp1, comp2):
     average_bulk = []
     average_shear = []
 
-    for prop in range(100):
-        proportion.append(prop)
+    for prop in range(sampling_step):
+        proportion.append(prop/sampling_step)
 
         current_bulk = get_HS_bulk_bounds(bulk, shear, prop)
         current_shear = get_HS_shear_bounds(bulk, shear, prop)
@@ -193,7 +193,7 @@ def get_moduli_by_HS(get_HS_for_all_proportions, comp1, comp2, proportion):
 
     prop, average_bulk, average_shear = get_HS_for_all_proportions(comp1, comp2)
 
-    index = prop.index(proportion)
+    index = prop.index(proportion/100)
 
     return [average_bulk[index], average_shear[index]]
 

@@ -1,7 +1,7 @@
 import math
 
 
-def get_all_values_by_SCA(pores, matrix):
+def get_all_values_by_SCA(pores, matrix, sampling_step = 100):
     # функция принимает на вход два массива следующего вида:
     # pores = [bulk_p, shear_p, asp_p], где элементы массива: bulk и shear модули и аспектное отношение флюида,
         # насыщающего поры (воздух, например)
@@ -55,7 +55,7 @@ def get_all_values_by_SCA(pores, matrix):
 
     # пройдем по всем значениям пористости от 0 до 100%
     # x1 - пористость, x2 - содержание твердой компоненты
-    for x1 in [epsilon] + [i /100 for i in range(1, 100)] + [1 - epsilon]:
+    for x1 in [epsilon] + [i /sampling_step for i in range(1, sampling_step)] + [1 - epsilon]:
         x2 = 1 - x1
 
         ksc = x1 * k1 + x2 * k2

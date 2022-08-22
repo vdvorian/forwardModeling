@@ -16,7 +16,7 @@ def prepare_ODE_function(t, y):
     return [dkdt, dndt]
 
 
-def get_all_values_by_DEM(matrix):
+def get_all_values_by_DEM(matrix, sampling_step = 100):
     # функция принимает на вход два массива следующего вида:
     # pores = [bulk_p, shear_p], где элементы массива: bulk и shear модули и аспектное отношение флюида,
     # насыщающего поры (воздух, например)
@@ -28,7 +28,10 @@ def get_all_values_by_DEM(matrix):
 
     k1, n1 = matrix
 
-    result = integrate.solve_ivp(fun = prepare_ODE_function, t_span = (0, 0.99), y0 = [k1, n1],
+    final_t = 1 - 1/sampling_step
+    step = 1/sampling_step
+
+    result = integrate.solve_ivp(fun = prepare_ODE_function, t_span = (0, final_t), y0 = [k1, n1],
                                  dense_output = 'true', max_step = 0.01, vectorized = 'true')
 
     por = result.t
@@ -38,10 +41,10 @@ def get_all_values_by_DEM(matrix):
     return por, k_dem, n_dem
 
 
-def get_moduli_by_DEM(get_all_values_by_DEM, matrix, porosity):
+def get_moduli_by_DEM(get_all_values_by_DEM, matrix, porosity, sampling_step = 100):
     por, k_dem, n_dem = get_all_values_by_DEM(matrix)
 
-    por_for_index = np.arange(0, 0.99, 0.01)
+    por_for_index = np.arange(0, 1 - 1/sampling_step, 1/sampling_step)
     i = np.where(por_for_index == porosity/100)
     index = i[0][0]
 

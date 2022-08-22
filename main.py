@@ -16,7 +16,7 @@ gas = [0.04, 0]
 water = [2.5, 0]
 
 prop_calc_dol = 25
-porosity = 97
+porosity = 5
 
 
 matrix = get_moduli_by_HS(get_HS_for_all_proportions, calcite, dolomite, prop_calc_dol)
