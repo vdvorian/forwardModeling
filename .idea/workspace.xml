@@ -21,6 +21,8 @@
     <setting file="file://$PROJECT_DIR$/DEM.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/HS.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/SCA.py" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/main.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/wood_gassmann.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
