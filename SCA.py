@@ -1,7 +1,7 @@
 import math
 
 
-def get_moduli_by_SCA(pores, matrix, porosity):
+def get_all_values_by_SCA(pores, matrix):
     # функция принимает на вход два массива следующего вида:
     # pores = [bulk_p, shear_p, asp_p], где элементы массива: bulk и shear модули и аспектное отношение флюида,
         # насыщающего поры (воздух, например)
@@ -48,9 +48,14 @@ def get_moduli_by_SCA(pores, matrix, porosity):
 
     epsilon = 1e-7   # опять же, чтобы нигде не было деления на ноль
 
+    if k1 == 0:
+        k1 = epsilon
+    if k2 == 0:
+        k2 = epsilon
+
     # пройдем по всем значениям пористости от 0 до 100%
     # x1 - пористость, x2 - содержание твердой компоненты
-    for x1 in [epsilon] + [i /1000 for i in range(1, 1000)] + [1 - epsilon]:
+    for x1 in [epsilon] + [i /100 for i in range(1, 100)] + [1 - epsilon]:
         x2 = 1 - x1
 
         ksc = x1 * k1 + x2 * k2
@@ -123,6 +128,12 @@ def get_moduli_by_SCA(pores, matrix, porosity):
         kbr.append(ksc)
         nbr.append(nsc)
 
-    index = por.index(porosity/100)
+    return por, kbr, nbr
+
+
+def get_moduli_by_SCA(get_all_values_by_SCA, pores, matrix, porosity):
+    por, kbr, nbr = get_all_values_by_SCA(pores, matrix)
+
+    index = por.index(porosity / 100)
 
     return [kbr[index], nbr[index]]

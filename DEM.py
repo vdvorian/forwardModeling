@@ -1,9 +1,9 @@
 import scipy.integrate as integrate
 
 
-# вспомогательная функция для integrate.solve_ivp: приготовим наши ОДУ
-def prepare_ODU(t, y):
-    k1, n1 = y   # начальные условия - упругие модули твердой компоненты
+# вспомогательная функция для integrate.solve_ivp: подготовка ОДУ
+def prepare_ODU_function(t, y):
+    k1, n1, k2, n2 = y
 
     p = (k1 + 4 / 3 * n1) / (k2 + 4 / 3 * n1)
     dzeta = n1 * (9 * k1 + 8 * n1) / (6 * (k1 + 2 * n1))
@@ -16,7 +16,7 @@ def prepare_ODU(t, y):
 
 
 
-def get_moduli_by_DEM(prepare_ODU, pores, matrix, porosity):
+def get_all_values_by_DEM(matrix, pores):
     # функция принимает на вход два массива следующего вида:
     # pores = [bulk_p, shear_p], где элементы массива: bulk и shear модули и аспектное отношение флюида,
         # насыщающего поры (воздух, например)
@@ -29,7 +29,8 @@ def get_moduli_by_DEM(prepare_ODU, pores, matrix, porosity):
     k1, n1 = matrix
     k2, n2 = pores
 
-    result = integrate.solve_ivp(fun = prepare_ODU, t_span = (0,0.999), y0 = [k1, n1],
+
+    result = integrate.solve_ivp(fun = prepare_ODU_function, t_span = (0,0.999), y0 = [k1, n1],
                                  dense_output = 'true', max_step = 0.001, vectorized = 'true')
 
     return result.t, result.y[0], result.y[1]
