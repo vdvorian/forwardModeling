@@ -52,6 +52,10 @@ def get_all_values_by_SCA(pores, matrix, sampling_step = 100):
         k1 = epsilon
     if k2 == 0:
         k2 = epsilon
+    if n1 == 0:
+        n1 = epsilon
+    if n2 == 0:
+        n2 = epsilon
 
     # пройдем по всем значениям пористости от 0 до 100%
     # x1 - пористость, x2 - содержание твердой компоненты

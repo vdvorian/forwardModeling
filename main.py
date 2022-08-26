@@ -2,31 +2,54 @@ from HS import *
 from SCA import *
 from DEM import *
 from wood_gassmann import *
+
 import matplotlib.pyplot as plt
+from time import time
 
 
-# смешать кальцит и доломит по HS в пропорции 1:3
-# добавить в твердое вещество поры по DEM (пористость 5%)
-# смешать воду и воздух по Гассману в пропорции 1:1
-# насытить флюидом поры
 
-calcite = [71, 30]
-dolomite = [80, 49]
-gas = [0.04, 0]
-water = [2.5, 0]
+calcite = [70.8, 30.3]
+dolomite = [80.2, 48.8]
+anhydrite = [59.1, 31.4]
+illite = [25.3, 16.3]
 
-prop_calc_dol = 25
-porosity = 5
+gas = [0.041, 0]
+water = [2.496, 0]
 
 
-matrix = get_moduli_by_HS(get_HS_for_all_proportions, calcite, dolomite, prop_calc_dol)
-print('композит кальцит+доломит:', matrix)
+# смешаем кальцит и доломит по Хашину-Штрикману в пропорции 1:1
+proportion = 50
+dol_prop, dol_bulk_d, dol_bulk_u, dol_shear_d, dol_shear_u = get_HS_for_all_proportions(calcite, dolomite)
 
-matrix_pores = get_moduli_by_DEM(get_all_values_by_DEM, matrix, porosity)
-print('кальцит+доломит с порами', matrix_pores)
+dol_bulk_average = []
+dol_shear_average = []
+for i in range(len(dol_prop)):
+    dol_bulk_average.append((dol_bulk_d[i] + dol_bulk_u[i])/2)
+    dol_shear_average.append((dol_shear_d[i] + dol_shear_u[i])/2)
 
-fluid = get_fluid_modulus_by_wood(gas, water, prop = 3)
-print('газ + вода', fluid)
 
-final_saturated_rock = get_saturated_by_gassman(matrix_pores, matrix, fluid, porosity)
-print('насыщенная флюидом порода', final_saturated_rock)
+print(dol_prop)
+print(dol_bulk_average)
+print(dol_bulk_d)
+print(dol_bulk_u)
+
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(3, 3))
+fig.suptitle('Calcite + Dolomite (HS)')
+
+axes[0].plot(dol_prop, dol_bulk_d, c = 'b')
+axes[0].plot(dol_prop, dol_bulk_u, c = 'r')
+axes[0].plot(dol_prop, dol_bulk_average, c = 'k')
+axes[0].scatter(dol_prop[proportion], dol_bulk_average[proportion], c = 'k')
+axes[0].set_title('Bulk Modulus')
+
+axes[1].plot(dol_prop, dol_shear_d, c = 'b')
+axes[1].plot(dol_prop, dol_shear_u, c = 'r')
+axes[1].plot(dol_prop, dol_bulk_average, c = 'k')
+axes[1].scatter(dol_prop[proportion], dol_shear_average[proportion], c = 'k')
+axes[1].set_title('Shear Modulus')
+
+axes[0].show()
+
+
+
+

@@ -9,6 +9,11 @@ def get_fluid_modulus_by_wood(fluid1, fluid2, prop):
     bulk = [fluid1[0], fluid2[0]]
     average_shear = 0
 
+    if bulk[0] == 0:
+        bulk[0] = 1e-7
+    if bulk[1] == 0:
+        bulk[1] = 1e-7
+
     bulk = np.array(bulk)
     prop = np.array(prop)
 
