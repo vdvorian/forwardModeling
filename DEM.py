@@ -1,7 +1,6 @@
 import scipy.integrate as integrate
 import numpy as np
 
-
 def prepare_ODE_function(t, y):
     k1, n1 = y
     k2, n2 = 0, 0

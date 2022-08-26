@@ -41,7 +41,6 @@ def get_velocity_by_wood(get_bulk_modulus_by_wood, bulk, dens, prop):
 
     return velocity
 
-
 # формула Гассмана - получаем упругие модули породы, поры которой насыщены флюидом
 def get_saturated_by_gassman(dry, matrix, fluid, porosity):
     k_dry, g_dry = dry  # сухая порода

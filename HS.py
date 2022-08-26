@@ -152,7 +152,6 @@ def get_HS_for_many_components(bulk, shear, prop):
     return final_bulk_bounds, final_shear_bounds
 
 
-
 # HS - bulk и shear модули - 2 компоненты - для всех пропорций
 def get_HS_for_all_proportions(comp1, comp2, sampling_step = 100):
     # функция рассчитывает границы HS для всех отношений двух компонент

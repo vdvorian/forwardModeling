@@ -45,7 +45,6 @@ def get_all_values_by_SCA(pores, matrix, sampling_step = 100):
         theta2 = (asp2 / ((asp2 ** 2 - 1) ** (3 / 2))) * (asp2 * math.sqrt(asp2 ** 2 - 1) - math.acosh(asp2))
         fn2 = (asp2 ** 2 / (asp2 ** 2 - 1)) * (2 - 3 * theta2)
 
-
     epsilon = 1e-7   # опять же, чтобы нигде не было деления на ноль
 
     if k1 == 0:
