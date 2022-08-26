@@ -48,13 +48,13 @@ def get_all_values_by_SCA(pores, matrix, sampling_step = 100):
     epsilon = 1e-7   # опять же, чтобы нигде не было деления на ноль
 
     if k1 == 0:
-        k1 = epsilon
+        k1 = 1e-3
     if k2 == 0:
-        k2 = epsilon
+        k2 = 1e-3
     if n1 == 0:
-        n1 = epsilon
+        n1 = 1e-3
     if n2 == 0:
-        n2 = epsilon
+        n2 = 1e-3
 
     # пройдем по всем значениям пористости от 0 до 100%
     # x1 - пористость, x2 - содержание твердой компоненты

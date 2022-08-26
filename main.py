@@ -5,8 +5,10 @@ from wood_gassmann import *
 
 import matplotlib.pyplot as plt
 from time import time
+from math import *
 
 
+# 40% кальцита, 30% доломита, 15% ангидрита, 10% иллита, 5% пор: 4 круглых пор и 1 трещин
 
 calcite = [70.8, 30.3]
 dolomite = [80.2, 48.8]
@@ -16,40 +18,54 @@ illite = [25.3, 16.3]
 gas = [0.041, 0]
 water = [2.496, 0]
 
+cal_proportion = 40
+dol_proportion = 30
+anh_proportion = 15
+ill_proportion = 10
 
-# смешаем кальцит и доломит по Хашину-Штрикману в пропорции 1:1
-proportion = 50
-dol_prop, dol_bulk_d, dol_bulk_u, dol_shear_d, dol_shear_u = get_HS_for_all_proportions(calcite, dolomite)
-
-dol_bulk_average = []
-dol_shear_average = []
-for i in range(len(dol_prop)):
-    dol_bulk_average.append((dol_bulk_d[i] + dol_bulk_u[i])/2)
-    dol_shear_average.append((dol_shear_d[i] + dol_shear_u[i])/2)
+porosity = 5
 
 
-print(dol_prop)
-print(dol_bulk_average)
-print(dol_bulk_d)
-print(dol_bulk_u)
+# кальцит и доломит по Хашину-Штрикману
+proportion = round(get_proportion_for_HS(cal_proportion, dol_proportion))
+cal_dol = get_moduli_by_HS(get_HS_for_all_proportions, calcite, dolomite, proportion)
+print('HS кальцит + доломит:', cal_dol)
 
-fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(3, 3))
-fig.suptitle('Calcite + Dolomite (HS)')
+# кальцит, доломит и ангидрит по Хашину-Штрикману
+proportion = round(get_proportion_for_HS(anh_proportion, cal_proportion + dol_proportion))
+cal_dol_anh = get_moduli_by_HS(get_HS_for_all_proportions, anhydrite, cal_dol, proportion)
+print('HS кальцит + доломит + ангидрит:', cal_dol_anh)
 
-axes[0].plot(dol_prop, dol_bulk_d, c = 'b')
-axes[0].plot(dol_prop, dol_bulk_u, c = 'r')
-axes[0].plot(dol_prop, dol_bulk_average, c = 'k')
-axes[0].scatter(dol_prop[proportion], dol_bulk_average[proportion], c = 'k')
-axes[0].set_title('Bulk Modulus')
+# кальцит, доломит, ангидрит + иллит по SCA
+proportion = round(get_proportion_for_HS(ill_proportion, cal_proportion + dol_proportion + anh_proportion))
+cal_dol_anh_ill = get_moduli_by_SCA(get_all_values_by_SCA, [25.3, 16.3, 0.001],
+                                    [cal_dol_anh[0], cal_dol_anh[1], 1], proportion)
+print('SCA (кальцит + доломит + ангидрит) + иллит:', cal_dol_anh_ill)
 
-axes[1].plot(dol_prop, dol_shear_d, c = 'b')
-axes[1].plot(dol_prop, dol_shear_u, c = 'r')
-axes[1].plot(dol_prop, dol_bulk_average, c = 'k')
-axes[1].scatter(dol_prop[proportion], dol_shear_average[proportion], c = 'k')
-axes[1].set_title('Shear Modulus')
+# круглые поры в твердую матрицу по DEM
+matrix_pores = get_moduli_by_DEM(get_all_values_by_DEM, cal_dol_anh_ill, 4)
+print('DEM твердая матрица + круглые поры (воздух):', matrix_pores)
 
-axes[0].show()
+# трещины в матрицу с порами по SCA
+matrix_cracks = get_moduli_by_SCA(get_all_values_by_SCA, [0, 0, 0.01],
+                                    [matrix_pores[0], matrix_pores[1], 1], 1)
+print('SCA твердая матрица с порами + трещины:', matrix_cracks)
+print()
+
+# упругие модули флюида по Вуду
+fluid = get_fluid_modulus_by_wood(gas, water, 50)
+print('Wood: упругие модули флюида:', fluid)
+
+# насытим поры флюидом
+saturated = get_saturated_by_gassman(matrix_cracks, cal_dol_anh_ill, fluid, 5)
+print('Gassmann: готовая порода:', saturated)
 
 
+rho = 2.87
+k, g = saturated[0], saturated[1]
 
+vp = sqrt((k + g * 4/3) / rho)
+vs = sqrt(g / rho)
 
+print('vp', vp, 'км/c')
+print('vs', vs, 'км/c')

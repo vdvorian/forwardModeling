@@ -183,7 +183,7 @@ def get_HS_for_all_proportions(comp1, comp2, sampling_step = 100):
         average_bulk.append((current_bulk[0] + current_bulk[1])/2)
         average_shear.append((current_shear[0] + current_shear[1]) / 2)
 
-    return proportion, bulk_down, bulk_up, shear_down, shear_up
+    return proportion, average_bulk, average_shear
 
 
 # HS - bulk и shear модули смеси двух твердых компонент
