@@ -21,6 +21,7 @@
     <setting file="file://$PROJECT_DIR$/DEM.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/HS.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/SCA.py" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/forward_problem.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/main.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/wood_gassmann.py" root0="SKIP_INSPECTION" />
   </component>
@@ -33,12 +34,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "C:/Users/vdvor/Desktop/forwardModeling",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vdvor/Desktop/forwardProblem&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="forwardModeling" />
