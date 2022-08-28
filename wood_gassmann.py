@@ -55,11 +55,7 @@ def get_saturated_by_gassman(dry, matrix, fluid, porosity):
 
 
 # рассчет скоростей vp и vs
-def get_velocity(rho_components, proportions, saturated):
-    rho = 0
-    for i in range(len(rho_components)):
-        rho += rho_components[i] * proportions[i] / 100
-
+def get_velocity(rho, saturated):
     k, g = saturated[0], saturated[1]
 
     vp = math.sqrt((k + g * 4 / 3) / rho)

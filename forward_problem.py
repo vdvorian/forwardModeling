@@ -11,9 +11,9 @@ from math import *
 
 def do_forward_problem(get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SCA, get_moduli_by_DEM,
                        get_fluid_modulus_by_wood, get_saturated_by_gassman, get_velocity,
-                       calcite, dolomite, anhydrite, illite, water, gas, props, rho_components):
+                       calcite, dolomite, anhydrite, illite, water, gas, props, rho_components, porosity):
 
-    cal_prop, dol_prop, anh_prop, ill_prop, porosity = props[0], props[1], props[2], props[3], props[4]
+    cal_prop, dol_prop, anh_prop, ill_prop = props[0], props[1], props[2], props[3]
 
     start = time()
 
@@ -29,6 +29,7 @@ def do_forward_problem(get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SC
     proportion = round(get_proportion_for_HS(ill_prop, cal_prop + dol_prop + anh_prop))
     cal_dol_anh_ill = get_moduli_by_SCA(get_all_values_by_SCA, [illite[0], illite[1], 0.001],
                                         [cal_dol_anh[0], cal_dol_anh[1], 1], proportion)
+    print('matrix', cal_dol_anh_ill)
 
     # круглые поры в твердую матрицу по DEM
     matrix_pores = get_moduli_by_DEM(get_all_values_by_DEM, cal_dol_anh_ill, porosity)
@@ -38,9 +39,19 @@ def do_forward_problem(get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SC
 
     # насытим поры флюидом
     saturated = get_saturated_by_gassman(matrix_pores, cal_dol_anh_ill, fluid, porosity)
+    print('saturated', saturated)
 
     # рассчитаем скорости Vp и Vs
-    vp, vs = get_velocity(rho_components, props, saturated)
+
+    rho_matrix = 0
+    for i in range(len(rho_components)):
+        rho_matrix += rho_components[i] * props[i] / 100
+    print('rho matrix', rho_matrix)
+
+    rho_fluid = 1 * porosity / 100
+    rho = rho_fluid + rho_matrix * (100 - porosity) / 100
+
+    vp, vs = get_velocity(rho, saturated)
 
     end = time()
 
@@ -52,7 +63,7 @@ def do_forward_problem_matrix(get_proportion_for_HS, get_moduli_by_HS, get_modul
                        get_fluid_modulus_by_wood, get_saturated_by_gassman, get_velocity,
                        calcite, dolomite, anhydrite, illite, water, gas, props, rho_components):
 
-    cal_prop, dol_prop, anh_prop, ill_prop, porosity = props[0], props[1], props[2], props[3], props[4]
+    cal_prop, dol_prop, anh_prop, ill_prop = props[0], props[1], props[2], props[3]
 
     start = time()
 
@@ -72,31 +83,37 @@ def do_forward_problem_matrix(get_proportion_for_HS, get_moduli_by_HS, get_modul
     # упругие модули флюида по Вуду
     fluid = get_fluid_modulus_by_wood(gas, water, 50)
 
-    return cal_dol_anh_ill, fluid
+    rho_matrix = 0
+    for i in range(len(rho_components)):
+        rho_matrix += rho_components[i] * props[i] / 100
+
+    return cal_dol_anh_ill, fluid, rho_matrix
+
 
 
 def do_forward_problem_pores(do_forward_problem_matrix, get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SCA,
                              get_moduli_by_DEM, get_fluid_modulus_by_wood, get_saturated_by_gassman, get_velocity,
-                             calcite, dolomite, anhydrite, illite, water, gas, props, rho_components):
+                             porosity, calcite, dolomite, anhydrite, illite, water, gas, props, rho_components):
 
-    cal_dol_anh_ill, fluid = do_forward_problem_matrix(get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SCA,
-                                                get_moduli_by_DEM, get_fluid_modulus_by_wood, get_saturated_by_gassman,
-                                                get_velocity, calcite, dolomite, anhydrite, illite, water, gas, props,
-                                                rho_components)
+    cal_dol_anh_ill, fluid, rho_matrix = do_forward_problem_matrix(get_proportion_for_HS, get_moduli_by_HS, get_moduli_by_SCA,
+                            get_moduli_by_DEM, get_fluid_modulus_by_wood, get_saturated_by_gassman, get_velocity,
+                            calcite, dolomite, anhydrite, illite, water, gas, props, rho_components)
 
 
     # круглые поры в твердую матрицу по DEM
     matrix_pores = get_moduli_by_DEM(get_all_values_by_DEM, cal_dol_anh_ill, porosity)
 
-    # упругие модули флюида по Вуду
-    fluid = get_fluid_modulus_by_wood(gas, water, 50)
-
     # насытим поры флюидом
     saturated = get_saturated_by_gassman(matrix_pores, cal_dol_anh_ill, fluid, porosity)
+    print('saturated', saturated)
 
     # рассчитаем скорости Vp и Vs
-    vp, vs = get_velocity(rho_components, props, saturated)
+    rho_fluid = 1
+    print('rho fluid', rho_fluid * porosity / 100)
+    rho = rho_matrix * (1 - porosity/100) + rho_fluid * porosity/100
+    k, g = saturated[0], saturated[1]
 
-    end = time()
+    vp = math.sqrt((k + g * 4 / 3) / rho)
+    vs = math.sqrt(g / rho)
 
-    return vp, vs, end - start
+    return vp, vs
